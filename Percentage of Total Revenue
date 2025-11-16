@@ -1,0 +1,11 @@
+
+USE sql_store;
+SELECT 
+    name AS product_name,
+    SUM(quantity * oi.unit_price) AS total_Revenue, 
+    AVG(oi.unit_price) AS Price_avg,
+    ROUND(SUM(quantity * oi.unit_price) / SUM(SUM(quantity * oi.unit_price)) OVER() * 100, 2) AS Percentage
+FROM products 
+JOIN order_items oi USING (product_id)
+GROUP BY name
+ORDER BY total_Revenue DESC;
