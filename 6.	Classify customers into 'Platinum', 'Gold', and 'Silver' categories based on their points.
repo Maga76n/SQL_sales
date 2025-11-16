@@ -1,0 +1,9 @@
+SELECT
+    first_name,
+    points,
+    CASE
+        WHEN points > 3000 THEN 'Platinum'
+        WHEN points BETWEEN 2000 AND 3000 THEN 'Gold'
+        ELSE 'Silver'
+    END AS category
+FROM customers;
