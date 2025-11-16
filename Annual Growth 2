@@ -1,0 +1,16 @@
+USE sql_store;
+
+with total_revenue as (
+select 
+
+sum(case when year(order_date)=2017 then (quantity*unit_price) else 0 end) as total_revenue_2017,
+sum(case when year(order_date)=2018 then (quantity*unit_price) else 0 end) as total_revenue_2018
+from order_items
+join orders using(order_id)
+where year(order_date) in (2017,2018)
+)
+
+select 
+total_revenue_2017,total_revenue_2018,
+((total_revenue_2018-total_revenue_2017)/total_revenue_2017)*100 as Growth
+from total_revenue
