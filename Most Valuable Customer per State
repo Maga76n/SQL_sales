@@ -1,0 +1,19 @@
+with total_spending as (
+select customer_id, concat(first_name,' ',last_name) as full_name, state,
+sum(quantity*unit_price) as total_spent
+from customers
+join orders using (customer_id)
+join order_items using (order_id)
+group by customer_id, concat(first_name,' ',last_name),state
+),
+
+Customer_rank as (select customer_id, 
+full_name, state,total_spent,
+dense_rank() over(partition by state order by total_spent desc) as Ranking
+from total_spending)
+
+select customer_id, 
+full_name, state,total_spent, 
+Ranking
+from Customer_rank 
+where Ranking= 1
