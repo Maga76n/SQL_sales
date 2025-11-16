@@ -1,0 +1,15 @@
+
+USE sql_store;
+WITH order_value AS (
+    SELECT 
+        order_id, 
+        SUM(quantity * unit_price) AS total_value
+    FROM order_items
+    GROUP BY order_id
+)
+SELECT 
+    order_id, 
+    total_value
+FROM order_value 
+WHERE total_value > (SELECT AVG(total_value) FROM order_value)
+ORDER BY total_value DESC;
