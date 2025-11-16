@@ -1,0 +1,17 @@
+
+USE sql_store;
+WITH Previous_order AS (
+    SELECT 
+        customer_id, 
+        CONCAT(first_name, ' ', last_name) AS Full_name,
+        order_date, 
+        LAG(order_date, 1) OVER(PARTITION BY customer_id ORDER BY order_date) AS provious_date
+    FROM customers
+    JOIN orders USING(customer_id)
+)
+SELECT 
+    customer_id, 
+    Full_name,
+    DATEDIFF(order_date, provious_date) AS difference
+FROM Previous_order
+WHERE DATEDIFF(order_date, provious_date) IS NOT NULL;
