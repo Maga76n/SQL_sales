@@ -1,0 +1,10 @@
+use sql_store;
+
+    SELECT 
+        c.Customer_id, 
+        CONCAT(c.first_name, ' ', c.last_name) AS Full_name,
+       count(distinct order_id) as Total_orders, datediff( max(order_date),min(order_date)) as date_dif
+    FROM customers c
+    JOIN orders o USING (customer_id)
+    GROUP BY c.customer_id, CONCAT(c.first_name, ' ', c.last_name)
+    having Total_orders>1
