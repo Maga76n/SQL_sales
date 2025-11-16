@@ -1,0 +1,21 @@
+USE sql_store;
+
+WITH total_revenue_2017 AS (
+    SELECT SUM(oi.quantity * oi.unit_price) AS total_revenue_2017
+    FROM order_items oi
+    JOIN orders o USING (order_id)
+    WHERE YEAR(o.order_date) = 2017
+),
+total_revenue_2018 AS (
+    SELECT SUM(oi.quantity * oi.unit_price) AS total_revenue_2018
+    FROM order_items oi
+    JOIN orders o USING (order_id)
+    WHERE YEAR(o.order_date) = 2018
+)
+SELECT 
+    ROUND(
+        ((t2018.total_revenue_2018 - t2017.total_revenue_2017) / t2017.total_revenue_2017) * 100, 
+        2
+    ) AS growth_percentage
+FROM total_revenue_2017 t2017
+CROSS JOIN total_revenue_2018 t2018;
